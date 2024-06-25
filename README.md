@@ -1,12 +1,29 @@
 # Hybrid Federated Kernel Regularized Least Squares
 
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Overview
+This repository contains the implementation and usage examples for **FedCG**, ...(ref al paper). The project provides a Jupyter notebook that demonstrates how to use FedCG, along with the necessary dependencies listed in the `requirements.txt` file.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Files in the Repository
+- **FedCG_usage.ipynb**: A Jupyter notebook demonstrating how to use FedCG and containing launching codes for the tests in the paper.
+- **requirements.txt**: A list of Python dependencies required to run FedCG.
+- **.gitignore**: specifies files and directories to ignore in the Git repository.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Getting Started
 
+### Prerequisites
+Ensure you have the following installed:
+- Python 3.8 or higher
+- Jupyter Notebook
+
+### Installation
+
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/yourusername/FedCG.git
+   cd FedCG
+
+2. **Create a virtual environment (optional)**
+    ```sh
+   python -m venv venv
+   source venv/bin/activate # On Windows, use `venv\Scripts\activate`
