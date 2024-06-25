@@ -1,0 +1,39 @@
+--- Start Diary ---
+
+ Dataset:  Iris 
+
+ Nystrom method:  uniform 
+
+ Completion method:  Soft-Impute 
+#(Nystrom) 10 in the range 10-150
+#(Nystrom) 20 in the range 10-150
+#(Nystrom) 30 in the range 10-150
+#(Nystrom) 40 in the range 10-150
+#(Nystrom) 50 in the range 10-150
+10 trials for Nystrom 10 time: 420.56 seconds
+10 trials for Nystrom 20 time: 683.19 seconds
+10 trials for Nystrom 30 time: 905.28 seconds
+10 trials for Nystrom 40 time: 1233.40 seconds
+10 trials for Nystrom 50 time: 1470.86 seconds
+#(Nystrom) 60 in the range 10-150
+10 trials for Nystrom 60 time: 1815.95 seconds
+#(Nystrom) 70 in the range 10-150
+10 trials for Nystrom 70 time: 2096.42 seconds
+#(Nystrom) 80 in the range 10-150
+10 trials for Nystrom 80 time: 2534.82 seconds
+#(Nystrom) 90 in the range 10-150
+10 trials for Nystrom 90 time: 2808.53 seconds
+#(Nystrom) 100 in the range 10-150
+10 trials for Nystrom 100 time: 3423.37 seconds
+#(Nystrom) 110 in the range 10-150
+10 trials for Nystrom 110 time: 3863.89 seconds
+#(Nystrom) 120 in the range 10-150
+10 trials for Nystrom 120 time: 4340.78 seconds
+#(Nystrom) 130 in the range 10-150
+10 trials for Nystrom 130 time: 4669.87 seconds
+#(Nystrom) 140 in the range 10-150
+10 trials for Nystrom 140 time: 5347.10 seconds
+#(Nystrom) 150 in the range 10-150
+10 trials for Nystrom 150 time: 5506.64 seconds
+
+--- End Diary ---

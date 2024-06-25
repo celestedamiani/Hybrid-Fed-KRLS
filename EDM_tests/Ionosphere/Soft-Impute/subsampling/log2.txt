@@ -1,0 +1,19 @@
+--- Start Diary ---
+
+ Dataset:  Ionosphere 
+
+ Nystrom method:  subsampling 
+
+ Completion method:  Soft-Impute 
+#(Nystrom) 290 in the range 290-350
+#(Nystrom) 300 in the range 290-350
+#(Nystrom) 310 in the range 290-350
+#(Nystrom) 320 in the range 290-350
+#(Nystrom) 330 in the range 290-350
+10 trials for Nystrom 290 time: 50368.39 seconds
+10 trials for Nystrom 300 time: 54577.97 seconds
+10 trials for Nystrom 310 time: 57017.20 seconds
+10 trials for Nystrom 320 time: 60992.01 seconds
+10 trials for Nystrom 330 time: 63890.88 seconds
+
+--- End Diary ---

@@ -1,0 +1,39 @@
+--- Start Diary ---
+
+ Dataset:  Iris 
+
+ Nystrom method:  normal 
+
+ Completion method:  Rank_Alternation 
+#(Nystrom) 10 in the range 10-150
+#(Nystrom) 20 in the range 10-150
+#(Nystrom) 30 in the range 10-150
+#(Nystrom) 40 in the range 10-150
+#(Nystrom) 50 in the range 10-150
+10 trials for Nystrom 10 time: 47.79 seconds
+10 trials for Nystrom 20 time: 53.40 seconds
+10 trials for Nystrom 30 time: 57.82 seconds
+10 trials for Nystrom 50 time: 63.27 seconds
+10 trials for Nystrom 40 time: 68.71 seconds
+#(Nystrom) 60 in the range 10-150
+10 trials for Nystrom 60 time: 57.03 seconds
+#(Nystrom) 70 in the range 10-150
+10 trials for Nystrom 70 time: 50.52 seconds
+#(Nystrom) 80 in the range 10-150
+10 trials for Nystrom 80 time: 48.64 seconds
+#(Nystrom) 100 in the range 10-150
+10 trials for Nystrom 100 time: 45.31 seconds
+#(Nystrom) 90 in the range 10-150
+10 trials for Nystrom 90 time: 43.56 seconds
+#(Nystrom) 120 in the range 10-150
+10 trials for Nystrom 120 time: 41.96 seconds
+#(Nystrom) 110 in the range 10-150
+10 trials for Nystrom 110 time: 44.34 seconds
+#(Nystrom) 130 in the range 10-150
+10 trials for Nystrom 130 time: 43.07 seconds
+#(Nystrom) 140 in the range 10-150
+10 trials for Nystrom 140 time: 42.95 seconds
+#(Nystrom) 150 in the range 10-150
+10 trials for Nystrom 150 time: 40.88 seconds
+
+--- End Diary ---

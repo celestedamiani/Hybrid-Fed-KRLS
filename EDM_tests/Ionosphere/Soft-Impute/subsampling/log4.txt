@@ -1,0 +1,11 @@
+--- Start Diary ---
+
+ Dataset:  Ionosphere 
+
+ Nystrom method:  subsampling 
+
+ Completion method:  Soft-Impute 
+#(Nystrom) 270 in the range 270-270
+10 trials for Nystrom 270 time: 59471.84 seconds
+
+--- End Diary ---

@@ -1,0 +1,39 @@
+--- Start Diary ---
+
+ Dataset:  Iris 
+
+ Nystrom method:  subsampling 
+
+ Completion method:  Alternating_Descent 
+#(Nystrom) 10 in the range 10-150
+#(Nystrom) 20 in the range 10-150
+#(Nystrom) 30 in the range 10-150
+#(Nystrom) 40 in the range 10-150
+#(Nystrom) 50 in the range 10-150
+10 trials for Nystrom 10 time: 11.04 seconds
+10 trials for Nystrom 20 time: 12.60 seconds
+10 trials for Nystrom 30 time: 13.72 seconds
+10 trials for Nystrom 40 time: 15.83 seconds
+10 trials for Nystrom 50 time: 17.46 seconds
+#(Nystrom) 60 in the range 10-150
+10 trials for Nystrom 60 time: 17.87 seconds
+#(Nystrom) 70 in the range 10-150
+10 trials for Nystrom 70 time: 20.24 seconds
+#(Nystrom) 80 in the range 10-150
+10 trials for Nystrom 80 time: 21.86 seconds
+#(Nystrom) 90 in the range 10-150
+10 trials for Nystrom 90 time: 23.70 seconds
+#(Nystrom) 100 in the range 10-150
+10 trials for Nystrom 100 time: 27.32 seconds
+#(Nystrom) 110 in the range 10-150
+10 trials for Nystrom 110 time: 30.34 seconds
+#(Nystrom) 120 in the range 10-150
+10 trials for Nystrom 120 time: 33.14 seconds
+#(Nystrom) 130 in the range 10-150
+10 trials for Nystrom 130 time: 36.08 seconds
+#(Nystrom) 140 in the range 10-150
+10 trials for Nystrom 140 time: 39.60 seconds
+#(Nystrom) 150 in the range 10-150
+10 trials for Nystrom 150 time: 42.16 seconds
+
+--- End Diary ---

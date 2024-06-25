@@ -1,0 +1,52 @@
+>> diary(job139)
+--- Start Diary ---
+   208    60
+
+
+ Dataset:  Sonar 
+
+ Nystrom method:  subsampling 
+
+ Completion method:  Rank_Alternation 
+#(Nystrom) 10 in the range 10-200
+#(Nystrom) 20 in the range 10-200
+#(Nystrom) 30 in the range 10-200
+#(Nystrom) 40 in the range 10-200
+#(Nystrom) 50 in the range 10-200
+10 trials for Nystrom 10 time: 1.06 seconds
+10 trials for Nystrom 20 time: 1.13 seconds
+10 trials for Nystrom 30 time: 1.14 seconds
+10 trials for Nystrom 40 time: 197.37 seconds
+10 trials for Nystrom 50 time: 226.39 seconds
+#(Nystrom) 70 in the range 10-200
+10 trials for Nystrom 70 time: 262.10 seconds
+#(Nystrom) 90 in the range 10-200
+10 trials for Nystrom 90 time: 300.03 seconds
+#(Nystrom) 110 in the range 10-200
+10 trials for Nystrom 110 time: 347.32 seconds
+#(Nystrom) 60 in the range 10-200
+10 trials for Nystrom 60 time: 230.39 seconds
+#(Nystrom) 80 in the range 10-200
+10 trials for Nystrom 80 time: 267.90 seconds
+#(Nystrom) 130 in the range 10-200
+10 trials for Nystrom 130 time: 392.04 seconds
+#(Nystrom) 100 in the range 10-200
+10 trials for Nystrom 100 time: 300.42 seconds
+#(Nystrom) 150 in the range 10-200
+10 trials for Nystrom 150 time: 448.97 seconds
+#(Nystrom) 120 in the range 10-200
+10 trials for Nystrom 120 time: 349.66 seconds
+#(Nystrom) 160 in the range 10-200
+10 trials for Nystrom 160 time: 461.23 seconds
+#(Nystrom) 170 in the range 10-200
+10 trials for Nystrom 170 time: 499.16 seconds
+#(Nystrom) 140 in the range 10-200
+10 trials for Nystrom 140 time: 406.23 seconds
+#(Nystrom) 180 in the range 10-200
+10 trials for Nystrom 180 time: 525.87 seconds
+#(Nystrom) 190 in the range 10-200
+10 trials for Nystrom 190 time: 535.38 seconds
+#(Nystrom) 200 in the range 10-200
+10 trials for Nystrom 200 time: 560.45 seconds
+
+--- End Diary ---

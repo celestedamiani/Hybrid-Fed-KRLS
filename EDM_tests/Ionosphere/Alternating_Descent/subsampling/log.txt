@@ -1,0 +1,79 @@
+--- Start Diary ---
+
+ Dataset:  Ionosphere 
+
+ Nystrom method:  subsampling 
+
+ Completion method:  Alternating_Descent 
+#(Nystrom) 10 in the range 10-350
+#(Nystrom) 20 in the range 10-350
+#(Nystrom) 30 in the range 10-350
+#(Nystrom) 40 in the range 10-350
+#(Nystrom) 50 in the range 10-350
+10 trials for Nystrom 10 time: 2013.51 seconds
+10 trials for Nystrom 20 time: 2228.91 seconds
+10 trials for Nystrom 30 time: 2354.26 seconds
+10 trials for Nystrom 40 time: 2532.11 seconds
+10 trials for Nystrom 50 time: 2697.71 seconds
+#(Nystrom) 80 in the range 10-350
+10 trials for Nystrom 80 time: 3495.75 seconds
+#(Nystrom) 110 in the range 10-350
+10 trials for Nystrom 110 time: 4060.19 seconds
+#(Nystrom) 140 in the range 10-350
+10 trials for Nystrom 140 time: 5037.48 seconds
+#(Nystrom) 170 in the range 10-350
+10 trials for Nystrom 170 time: 5925.94 seconds
+#(Nystrom) 70 in the range 10-350
+10 trials for Nystrom 70 time: 3120.28 seconds
+#(Nystrom) 200 in the range 10-350
+10 trials for Nystrom 200 time: 7014.36 seconds
+#(Nystrom) 100 in the range 10-350
+10 trials for Nystrom 100 time: 3841.72 seconds
+#(Nystrom) 60 in the range 10-350
+10 trials for Nystrom 60 time: 2899.29 seconds
+#(Nystrom) 130 in the range 10-350
+10 trials for Nystrom 130 time: 4565.35 seconds
+#(Nystrom) 90 in the range 10-350
+10 trials for Nystrom 90 time: 3629.56 seconds
+#(Nystrom) 160 in the range 10-350
+10 trials for Nystrom 160 time: 5782.50 seconds
+#(Nystrom) 190 in the range 10-350
+10 trials for Nystrom 190 time: 6520.33 seconds
+#(Nystrom) 120 in the range 10-350
+10 trials for Nystrom 120 time: 4292.55 seconds
+#(Nystrom) 220 in the range 10-350
+10 trials for Nystrom 220 time: 7808.56 seconds
+#(Nystrom) 150 in the range 10-350
+10 trials for Nystrom 150 time: 5343.86 seconds
+#(Nystrom) 240 in the range 10-350
+10 trials for Nystrom 240 time: 8329.68 seconds
+#(Nystrom) 180 in the range 10-350
+10 trials for Nystrom 180 time: 6190.72 seconds
+#(Nystrom) 260 in the range 10-350
+10 trials for Nystrom 260 time: 9385.83 seconds
+#(Nystrom) 210 in the range 10-350
+10 trials for Nystrom 210 time: 7393.60 seconds
+#(Nystrom) 280 in the range 10-350
+10 trials for Nystrom 280 time: 10214.53 seconds
+#(Nystrom) 230 in the range 10-350
+10 trials for Nystrom 230 time: 7925.63 seconds
+#(Nystrom) 300 in the range 10-350
+10 trials for Nystrom 300 time: 11572.28 seconds
+#(Nystrom) 250 in the range 10-350
+10 trials for Nystrom 250 time: 9653.69 seconds
+#(Nystrom) 310 in the range 10-350
+10 trials for Nystrom 310 time: 13417.49 seconds
+#(Nystrom) 270 in the range 10-350
+10 trials for Nystrom 270 time: 12600.98 seconds
+#(Nystrom) 320 in the range 10-350
+10 trials for Nystrom 320 time: 16713.70 seconds
+#(Nystrom) 290 in the range 10-350
+10 trials for Nystrom 290 time: 14847.67 seconds
+#(Nystrom) 330 in the range 10-350
+10 trials for Nystrom 330 time: 17355.63 seconds
+#(Nystrom) 340 in the range 10-350
+10 trials for Nystrom 340 time: 16218.66 seconds
+#(Nystrom) 350 in the range 10-350
+10 trials for Nystrom 350 time: 15370.17 seconds
+
+--- End Diary ---

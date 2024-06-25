@@ -1,0 +1,48 @@
+
+ Dataset:  Sonar 
+
+ Nystrom method:  uniform 
+
+ Completion method:  Alternating_Descent 
+#(Nystrom) 10 in the range 10-200
+#(Nystrom) 20 in the range 10-200
+#(Nystrom) 30 in the range 10-200
+#(Nystrom) 40 in the range 10-200
+#(Nystrom) 50 in the range 10-200
+10 trials for Nystrom 10 time: 1818.75 seconds
+10 trials for Nystrom 20 time: 2077.58 seconds
+10 trials for Nystrom 30 time: 2376.99 seconds
+10 trials for Nystrom 40 time: 2718.14 seconds
+10 trials for Nystrom 50 time: 3105.70 seconds
+#(Nystrom) 70 in the range 10-200
+10 trials for Nystrom 70 time: 3843.02 seconds
+#(Nystrom) 90 in the range 10-200
+10 trials for Nystrom 90 time: 4776.90 seconds
+#(Nystrom) 110 in the range 10-200
+10 trials for Nystrom 110 time: 5725.55 seconds
+#(Nystrom) 60 in the range 10-200
+10 trials for Nystrom 60 time: 3449.06 seconds
+#(Nystrom) 130 in the range 10-200
+10 trials for Nystrom 130 time: 6883.09 seconds
+#(Nystrom) 80 in the range 10-200
+10 trials for Nystrom 80 time: 4252.13 seconds
+#(Nystrom) 150 in the range 10-200
+10 trials for Nystrom 150 time: 8040.22 seconds
+#(Nystrom) 100 in the range 10-200
+10 trials for Nystrom 100 time: 5235.76 seconds
+#(Nystrom) 120 in the range 10-200
+10 trials for Nystrom 120 time: 6216.76 seconds
+#(Nystrom) 160 in the range 10-200
+10 trials for Nystrom 160 time: 8684.15 seconds
+#(Nystrom) 140 in the range 10-200
+10 trials for Nystrom 140 time: 7444.38 seconds
+#(Nystrom) 170 in the range 10-200
+10 trials for Nystrom 170 time: 9491.78 seconds
+#(Nystrom) 180 in the range 10-200
+10 trials for Nystrom 180 time: 10218.13 seconds
+#(Nystrom) 190 in the range 10-200
+10 trials for Nystrom 190 time: 10839.57 seconds
+#(Nystrom) 200 in the range 10-200
+10 trials for Nystrom 200 time: 11255.58 seconds
+
+--- End Diary ---
