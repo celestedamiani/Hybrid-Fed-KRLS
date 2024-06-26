@@ -74,7 +74,6 @@ EDM completion methods `alternating_descent.m` and `rank_complete_edm.m` used in
 <a id="1">[1]</a> 
 Damiani, C., Rodina, Y., Decherchi, S. (2024). 
 A Hybrid Federated Kernel Regularized Least Squares Algorithm
-[![DOI:](https://)](https://doi.org/)
 
 <a id="2">[2]</a> 
 Dokmanic, I., Parhizkar, R., Ranieri, J., Vetterli, M. (2015)
