@@ -3,6 +3,7 @@
 
 ## Overview
 This repository contains the code used in:
+
  *Damiani, C., Rodina, Y., Decherchi, S.* (2024). **A Hybrid Federated Kernel Regularized Least Squares Algorithm**. In: [![DOI:](https://)](https://doi.org/)
 
  The project provides a Jupyter notebook that demonstrates how to use **FedCG** in a simulated federated implementation, along with the necessary dependencies listed in the `requirements.txt` file. We also provide the code to carry out the performance tests. Moreover, `EDM_tests/` we report the Matlab code used for the experiments of Euclidean Distance Matrice (EDM) reconstruction that we carried out to test the efficiency of FedCG in protecting the EDM of the dataset points for different cardinalities of Nystrom landmarks sets. 
