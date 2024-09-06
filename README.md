@@ -43,8 +43,8 @@ Ensure you have the following installed:
 
 2. **Create a virtual environment (optional)**:
     ```sh
-   python -m venv venv
-   source venv/bin/activate
+   python3 -m venv venv
+   source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
 
 3. **Install the Required Packages**:
 
