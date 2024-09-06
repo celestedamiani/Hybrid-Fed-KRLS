@@ -25,7 +25,7 @@ def load_random_gen_dataset( N=2000, feat=3, seed=0,nystr_pt=50, nystr_method='u
             nystr_pt: number of Nystrom points
             nystr_method: method to generate Nystrom points, can be 'uniform', 'normal', or 'subsampling'
     Returns: X_train, y_train, X_test, y_test, W (Nystrom matrix)'''
-    print("Loading random generated dataset...")
+    #print("Loading random generated dataset...")
     # Constants definition
     HOSPITAL_COORDS = np.array([[2, 5], [0, 2], [2, -1]])
     NUM_HOSPITALS = len(HOSPITAL_COORDS)
@@ -69,20 +69,20 @@ def load_random_gen_dataset( N=2000, feat=3, seed=0,nystr_pt=50, nystr_method='u
     else:
         raise ValueError("nystr_method should be 'uniform', 'normal', or 'subsampling'")
     
-    print("W matrix shape: ", W.shape)
+    #print("W matrix shape: ", W.shape)
 
     return X_train, y_train, X_test, y_test, W
     
 
 def load_iris_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     '''Load the iris dataset from sklearn.datasets'''
-    print("Loading Iris dataset...")
+   #print("Loading Iris dataset...")
     iris = load_iris()
     X, y = iris.data, iris.target
     
-    print("Features are:", ', '.join(iris.feature_names))
-    print("Classes are:", ', '.join(iris.target_names))
-    print("but we'll consider 'setosa' as one class and 'versicolor'+'virginica' as another class")
+    #print("Features are:", ', '.join(iris.feature_names))
+    #print("Classes are:", ', '.join(iris.target_names))
+    #print("but we'll consider 'setosa' as one class and 'versicolor'+'virginica' as another class")
     
     # reducing to two classes
     y = np.where(y == 0, 1, -1)  # 'setosa' as class 1 and others as class -1
@@ -93,8 +93,8 @@ def load_iris_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     X_train = min_max_scaler.fit_transform(X_train_temp) 
     X_test = min_max_scaler.transform(X_test_temp)
 
-    print("y_train and y_test shape:", y_train.shape, y_test.shape)
-    print("X_train and X_test shape:", X_train.shape, X_test.shape)
+    #print("y_train and y_test shape:", y_train.shape, y_test.shape)
+    #print("X_train and X_test shape:", X_train.shape, X_test.shape)
     
     if nystr_method == 'uniform':
         W = rand(nystr_pt, X_train.shape[1] )
@@ -110,7 +110,7 @@ def load_iris_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     else:
         raise ValueError("nystr_method should be 'uniform', 'normal', or 'subsampling'")
     
-    print("W matrix shape: ", W.shape)
+    #print("W matrix shape: ", W.shape)
 
     
     return X_train, y_train, X_test, y_test, W
@@ -118,7 +118,7 @@ def load_iris_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
 
 def load_ionosphere_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     '''Load the Ionosphere dataset from OpenML'''
-    #print("Loading Ionosphere dataset...")
+   #print("Loading Ionosphere dataset...")
     ionosphere = fetch_openml(name='ionosphere', version=1, parser='auto')  # Explicitly setting parser='auto'
     X, y = ionosphere.data, ionosphere.target
     
@@ -186,12 +186,12 @@ def load_ionosphere_dataset_validation(seed=0, nystr_pt=50, nystr_method='unifor
     
 def load_sonar_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     '''Load the Sonar dataset from OpenML'''
-    print("Loading Sonar dataset...")
+   #print("Loading Sonar dataset...")
     sonar = fetch_openml(name='sonar', version=1, parser='auto')  # Explicitly setting parser='auto'
     X, y = sonar.data, sonar.target
     
     # Print unique labels to verify class assignment
-    print("Unique labels in the dataset:", np.unique(y))
+    #print("Unique labels in the dataset:", np.unique(y))
     
     # Convert labels to numeric values (1 for 'R' and -1 for 'M')
     y = np.where(y == 'Rock', 1, -1)
@@ -224,7 +224,7 @@ def load_sonar_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
 
 def load_bc_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     '''Load the Breast Cancer Wisconsin dataset'''
-    print("Loading the Breast Cancer Wisconsin dataset...")
+   #print("Loading the Breast Cancer Wisconsin dataset...")
     breast_ds= load_breast_cancer()
     
     X, y = breast_ds.data, breast_ds.target
@@ -244,8 +244,8 @@ def load_bc_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     X_test = min_max_scaler.transform(X_test)
 
 
-    print("X_train and X_test shape:", X_train.shape, X_test.shape)
-    print("y_train and y_test shape:", y_train.shape, y_test.shape)
+    #print("X_train and X_test shape:", X_train.shape, X_test.shape)
+    #print("y_train and y_test shape:", y_train.shape, y_test.shape)
     
     # Nystrom matrix generation based on nystr_method
     if nystr_method == 'uniform':
@@ -266,13 +266,13 @@ def load_bc_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
 
 def load_wine_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     '''Load the Wine Recognition dataset from sklearn.datasets'''
-    print("Loading Wine Recognition dataset...")
+   #print("Loading Wine Recognition dataset...")
     wine = load_wine()
     X, y = wine.data, wine.target
     
-    print("Features are:", ', '.join(wine.feature_names))
-    print("Classes are:", ', '.join(wine.target_names))
-    print("We will consider 'class_1' as one class and 'class_0'+'class_2' as another")
+    #print("Features are:", ', '.join(wine.feature_names))
+    #print("Classes are:", ', '.join(wine.target_names))
+    #print("We will consider 'class_1' as one class and 'class_0'+'class_2' as another")
     
     # reducing to two classes
     y = np.where(y == 1, 1, -1)  # 'class_1' as class 1 and others as class -1
@@ -283,8 +283,8 @@ def load_wine_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     X_train = min_max_scaler.fit_transform(X_train_temp) 
     X_test = min_max_scaler.transform(X_test_temp)
 
-    print("y_train and y_test shape:", y_train.shape, y_test.shape)
-    print("X_train and X_test shape:", X_train.shape, X_test.shape)
+    #print("y_train and y_test shape:", y_train.shape, y_test.shape)
+    #print("X_train and X_test shape:", X_train.shape, X_test.shape)
     
     if nystr_method == 'uniform':
         W = np.random.rand(nystr_pt, X_train.shape[1])
@@ -300,7 +300,7 @@ def load_wine_dataset(seed=0, nystr_pt=50, nystr_method='uniform'):
     else:
         raise ValueError("nystr_method should be 'uniform', 'normal', or 'subsampling'")
     
-    print("W matrix shape: ", W.shape)
+    #print("W matrix shape: ", W.shape)
 
     return X_train, y_train, X_test, y_test, W
 

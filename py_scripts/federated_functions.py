@@ -429,7 +429,9 @@ class FedCG:
         if alpha_init is None:
             alpha_init = self.initialize_alpha()  # Call initialize_alpha here to set alpha_init if None
         else:
-             print("alpha_init is already provided, ", alpha_init)
+             #print("alpha_init is already provided, ", alpha_init)
+             #print("alpha_init is already provided.")
+             pass
         if W is not None:
             self.W = W  # Store W as a class attribute
         else:

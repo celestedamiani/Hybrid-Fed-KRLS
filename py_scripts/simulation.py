@@ -5,6 +5,11 @@ from kernel import Kernel  # Make sure to import your Kernel class
 from federated_functions import FedCG  # Make sure to import your FedCG class
 from dataset_handler import * 
 
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from tqdm import tqdm
+from scipy.interpolate import griddata
+
 
 
 def model_simulation(dataset_name, num_runs, X_train, y_train, X_test, y_test, W, kernel_params, nyst_points, lam, Nb, toll):
@@ -210,3 +215,181 @@ def nys_simulation(dataset_name, num_runs, X_train, y_train, X_test, y_test, nys
 # [X_train, y_train, X_test, y_test, W ]=load_random_gen_dataset( N=2000, feat=3, seed=0, nystr_pt=50, nystr_method='subsampling')
 # K = kernel_params.build_kernel(X_train, W)
 # print('shape of K is:', K.shape)
+
+
+
+
+def nys_simulation_surface(dataset_name, num_runs, X_train, y_train, X_test, y_test, nyst_method, kernel_params, nystrom_landmarks_range, lambda_range, Nb, toll):
+    '''
+    Args:
+        dataset_name: Name of the dataset, can be 'Iris', 'Sonar', 'Ionosphere', 'Generated', 'BreastCancer', 'Wine'
+        num_runs: Number of Monte Carlo simulations
+        X_train: Training data
+        y_train: Training labels
+        X_test: Test data
+        y_test: Test labels
+        nyst_method: Method for Nyström landmarks generation, can be 'uniform' or 'normal' or 'subsampling'
+        kernel_params: instantiation of Kernel class
+        nystrom_landmarks_range: Range of Nyström points to evaluate
+        lambda_range: Range of regularization parameters to evaluate
+        Nb: Number of hospitals/clients
+        toll: Tolerance for the stopping criterion
+    Output: 
+        Saves the results of hte simulations to csv
+        Generates a surface plot with the accuracy results on z axis, number of Nyström landmarks on x axis, and regularisation parameter on y axis
+    '''
+
+    # Initialize arrays to store accuracy results for the surface plot
+    fedcg_accuracy_surface = np.zeros((len(nystrom_landmarks_range), len(lambda_range)))
+    cencg_accuracy_surface = np.zeros((len(nystrom_landmarks_range), len(lambda_range)))
+    
+    # Total iterations (for the progress bar)
+    total_iterations = len(nystrom_landmarks_range) * len(lambda_range) * num_runs
+    
+    with tqdm(total=total_iterations, desc="Running Simulation", ncols=100) as pbar:
+        for i, nyst_points in enumerate(nystrom_landmarks_range):
+            for j, lam in enumerate(lambda_range):
+                fedcg_accuracies = []
+                cencg_accuracies = []
+
+                # Initialize models with the current set of parameters
+                fedcg_model = FedCG(kernel_params, nyst_points, lam, Nb, toll)
+                cencg_model = FedCG(kernel_params, nyst_points, lam, 1, toll)
+                
+                # Initialize alpha once and use it for all runs
+                alpha_init = fedcg_model.initialize_alpha()
+
+                for run in range(num_runs):
+                    seedrun = np.random.seed(run)
+
+                    # Load W matrix based on the dataset
+                    if dataset_name == 'Iris':
+                        W = load_iris_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Sonar':
+                        W = load_sonar_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Ionosphere':
+                        W = load_ionosphere_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Generated':
+                        W = load_random_gen_dataset(N=2000, feat=3, seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'BreastCancer':
+                        W = load_bc_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Wine':
+                        W = load_wine_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+
+                    # Federated run
+                    _, _, fedcg_test_accuracy, _, _ = fedcg_model.fit(X_train, y_train, X_test, y_test, W=W, alpha_init=alpha_init, silent=True)
+                    fedcg_accuracies.append(fedcg_test_accuracy)
+
+                    # Centralized run
+                    _, _, cencg_test_accuracy, _, _ = cencg_model.fit(X_train, y_train, X_test, y_test, W=W, alpha_init=alpha_init, silent=True)
+                    cencg_accuracies.append(cencg_test_accuracy)
+                    
+                    # Update the progress bar
+                    pbar.update(1)
+                
+                # Average accuracies over all runs
+                fedcg_accuracy_surface[i, j] = np.mean(fedcg_accuracies)
+                cencg_accuracy_surface[i, j] = np.mean(cencg_accuracies)
+
+    # Save surfaces results as CSV 
+    pd.DataFrame(fedcg_accuracy_surface, index=nystrom_landmarks_range, columns=lambda_range).to_csv(f'fedcg_accuracy_surface_{dataset_name}.csv')
+    pd.DataFrame(cencg_accuracy_surface, index=nystrom_landmarks_range, columns=lambda_range).to_csv(f'cencg_accuracy_surface_{dataset_name}.csv')
+
+    # Create a meshgrid for plotting 
+    X, Y = np.meshgrid(nystrom_landmarks_range, lambda_range)
+
+    # Plot FedCG surface
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(X, Y, fedcg_accuracy_surface.T, cmap='viridis')    
+
+    # Set labels
+    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10, labelpad=10)
+    ax.set_ylabel('Regularization Parameter λ', fontsize=10, labelpad=10)
+    ax.set_zlabel('Accuracy', fontsize=12, labelpad=10)
+    ax.set_title(f'FedCG Accuracy Surface - {dataset_name}')
+    ax.tick_params(axis='x', rotation=45)
+    ax.tick_params(axis='y', rotation=-45)
+
+    # Set y-axis to logarithmic scale 
+    ax.set_yscale('log')
+    ax.set_yticks(lambda_range)
+    ax.set_yticklabels([f'{val:.0e}' for val in lambda_range])
+
+    # Save the figure
+    plt.savefig(f'fedcg_accuracy_surface_{dataset_name}.png')
+    plt.close()
+
+    # Plot CenCG surface
+    fig = plt.figure()
+    ax2 = fig.add_subplot(111, projection='3d')
+    ax2.plot_surface(X, Y, cencg_accuracy_surface.T, cmap='plasma')
+
+    # Set labels
+    ax2.set_xlabel('Number of Nystrom Landmarks', fontsize=10, labelpad=10)
+    ax2.set_ylabel('Regularization Parameter λ', fontsize=10, labelpad=10)
+    ax2.set_zlabel('Accuracy', fontsize=10, labelpad=10)
+    ax2.set_title(f'CenCG Accuracy Surface - {dataset_name}')
+    ax2.tick_params(axis='x', rotation=45)
+    ax2.tick_params(axis='y', rotation=-45)
+
+    # Set y-axis to logarithmic scale
+    ax2.set_yscale('log')
+    ax2.set_yticks(lambda_range)
+    ax2.set_yticklabels([f'{val:.0e}' for val in lambda_range])
+
+    # Save the figure
+    plt.savefig(f'cencg_accuracy_surface_{dataset_name}.png')
+    plt.close()
+
+    
+    # Plot FedCG filled contour
+    fig, ax = plt.subplots()
+    CS = ax.contourf(X, Y, fedcg_accuracy_surface.T, cmap='viridis')
+    cbar = fig.colorbar(CS)
+    cbar.set_label('Accuracy')
+    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
+    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
+    ax.set_title(f'FedCG Accuracy Contour - {dataset_name}')
+
+    # Mark the peak value
+    ax.plot(nystrom_landmarks_range[fedcg_peak_idx[0]], lambda_range[fedcg_peak_idx[1]], 'ro')  # Red dot at the peak
+    ax.text(nystrom_landmarks_range[fedcg_peak_idx[0]], lambda_range[fedcg_peak_idx[1]], f'Peak: {fedcg_accuracy_surface[fedcg_peak_idx]:.2f}', 
+            color='red', fontsize=10)
+
+    # Save the filled contour plot
+    ax.set_xscale('log')
+    plt.savefig(f'fedcg_accuracy_contour_{dataset_name}.png')
+    plt.close()
+
+    # Plot CenCG filled contour
+    fig, ax = plt.subplots()
+    CS = ax.contourf(X, Y, cencg_accuracy_surface.T, cmap='plasma')
+    cbar = fig.colorbar(CS)
+    cbar.set_label('Accuracy')
+    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
+    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
+    ax.set_title(f'CenCG Accuracy Contour - {dataset_name}')
+
+    # Mark the peak value
+    ax.plot(nystrom_landmarks_range[cencg_peak_idx[0]], lambda_range[cencg_peak_idx[1]], 'ro')  # Red dot at the peak
+    ax.text(nystrom_landmarks_range[cencg_peak_idx[0]], lambda_range[cencg_peak_idx[1]], f'Peak: {cencg_accuracy_surface[cencg_peak_idx]:.2f}', 
+            color='red', fontsize=10)
+
+    # Save the filled contour plot
+    ax.set_xscale('log')
+    plt.savefig(f'cencg_accuracy_contour_{dataset_name}.png')
+    plt.close()
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
