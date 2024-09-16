@@ -217,6 +217,45 @@ def nys_simulation(dataset_name, num_runs, X_train, y_train, X_test, y_test, nys
 # print('shape of K is:', K.shape)
 
 
+
+def find_peak_accuracy(accuracy_surface):
+    peak_idx = np.unravel_index(np.argmax(accuracy_surface), accuracy_surface.shape)
+    peak_value = accuracy_surface[peak_idx]
+    return peak_idx, peak_value
+
+
+def plot_surface(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, peak_accuracy):
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_surface(X, Y, Z, cmap='viridis')
+    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
+    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
+    ax.set_zlabel('Accuracy', fontsize=10)
+    ax.set_title(f'{model_name} Accuracy Surface - {dataset_name}', fontsize=12)
+    
+    # Mark the peak accuracy point
+    ax.scatter([peak_nystrom], [peak_lambda], [peak_accuracy], color='red', s=50, marker='*')
+    
+    plt.savefig(f'{dataset_name}_{model_name.lower()}_surface.png', dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+def plot_contour(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, peak_accuracy):
+    fig, ax = plt.subplots(figsize=(10, 8))
+    CS = ax.contourf(X, Y, Z, cmap='viridis')
+    fig.colorbar(CS)
+    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=12)
+    ax.set_ylabel('Regularization Parameter λ', fontsize=12)
+    ax.set_title(f'{model_name} Accuracy Contour - {dataset_name}', fontsize=14)
+    
+    # Mark the peak accuracy point
+    ax.plot(peak_nystrom, peak_lambda, 'ro')
+    ax.annotate(f'Peak: {peak_accuracy:.2f}', (peak_nystrom, peak_lambda), xytext=(5, 5), 
+                textcoords='offset points', color='red', fontweight='bold')
+    
+    plt.savefig(f'{dataset_name}_{model_name.lower()}_contour.png', dpi=300, bbox_inches='tight')
+    plt.close(fig)
+    
+    
 def nys_simulation_surface(dataset_name, num_runs, X_train, y_train, X_test, y_test, nyst_method, kernel_params, nystrom_landmarks_range, lambda_range, Nb, toll):
     '''
     Args:
@@ -295,58 +334,25 @@ def nys_simulation_surface(dataset_name, num_runs, X_train, y_train, X_test, y_t
 
     # Create a meshgrid for plotting 
     X, Y = np.meshgrid(nystrom_landmarks_range, lambda_range)
+    
+    # Find peak accuracies
+    fedcg_peak_idx, fedcg_peak_accuracy = find_peak_accuracy(fedcg_accuracy_surface)
+    cencg_peak_idx, cencg_peak_accuracy = find_peak_accuracy(cencg_accuracy_surface)
+    
+    # Get corresponding Nyström landmarks and lambda values
+    fedcg_peak_nystrom = nystrom_landmarks_range[fedcg_peak_idx[0]]
+    fedcg_peak_lambda = lambda_range[fedcg_peak_idx[1]]
+    cencg_peak_nystrom = nystrom_landmarks_range[cencg_peak_idx[0]]
+    cencg_peak_lambda = lambda_range[cencg_peak_idx[1]]
 
     # Plot and Save FedCG surface
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(X, Y, fedcg_accuracy_surface.T, cmap='viridis')
-    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
-    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
-    ax.set_zlabel('Accuracy', fontsize=10)
-    ax.set_title(f'FedCG Accuracy Surface - {dataset_name}', fontsize=12)
-    plt.savefig(f'{dataset_name}_fedcg_surface.png', dpi=300, bbox_inches='tight')
-    plt.close(fig)
+    plot_surface(X, Y, fedcg_accuracy_surface.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
 
     # Plot and Save CenCG surface
-    fig = plt.figure()
-    ax2 = fig.add_subplot(111, projection='3d')
-    ax2.plot_surface(X, Y, cencg_accuracy_surface.T, cmap='plasma')
-    ax2.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
-    ax2.set_ylabel('Regularization Parameter λ', fontsize=10)
-    ax2.set_zlabel('Accuracy', fontsize=10)
-    ax2.set_title(f'CenCG Accuracy Surface - {dataset_name}', fontsize=12)
-    plt.savefig(f'{dataset_name}_cencg_surface.png', dpi=300, bbox_inches='tight')
-    plt.close(fig)
+    plot_surface(X, Y, cencg_accuracy_surface.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
 
-    # Optionally, add contour plots for a 2D view
-    fig, ax = plt.subplots(figsize=(8, 6))
-    CS = ax.contourf(X, Y, fedcg_accuracy_surface.T, cmap='viridis')
-    fig.colorbar(CS)
-    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
-    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
-    ax.set_title(f'FedCG Accuracy Contour - {dataset_name}', fontsize=12)
-    
-    # Mark the peak accuracy point
-    fedcg_peak_idx = np.unravel_index(np.argmax(fedcg_accuracy_surface, axis=None), fedcg_accuracy_surface.shape)
-    ax.plot(nystrom_landmarks_range[fedcg_peak_idx[0]], lambda_range[fedcg_peak_idx[1]], 'ro')  # Red dot at the peak
-    ax.text(nystrom_landmarks_range[fedcg_peak_idx[0]], lambda_range[fedcg_peak_idx[1]], 
-            f'Peak: {fedcg_accuracy_surface[fedcg_peak_idx]:.2f}', color='red', fontsize=10)
+    # Plot and Save FedCG contour
+    plot_contour(X, Y, fedcg_accuracy_surface.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
 
-    plt.savefig(f'{dataset_name}_fedcg_contour.png', dpi=300, bbox_inches='tight')
-    plt.close(fig)
-
-    fig, ax2 = plt.subplots(figsize=(8, 6))
-    CS2 = ax2.contourf(X, Y, cencg_accuracy_surface.T, cmap='plasma')
-    fig.colorbar(CS2)
-    ax2.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
-    ax2.set_ylabel('Regularization Parameter λ', fontsize=10)
-    ax2.set_title(f'CenCG Accuracy Contour - {dataset_name}', fontsize=12)
-    
-    # Mark the peak accuracy point
-    cencg_peak_idx = np.unravel_index(np.argmax(cencg_accuracy_surface, axis=None), cencg_accuracy_surface.shape)
-    ax2.plot(nystrom_landmarks_range[cencg_peak_idx[0]], lambda_range[cencg_peak_idx[1]], 'ro')  # Red dot at the peak
-    ax2.text(nystrom_landmarks_range[cencg_peak_idx[0]], lambda_range[cencg_peak_idx[1]], 
-             f'Peak: {cencg_accuracy_surface[cencg_peak_idx]:.2f}', color='red', fontsize=10)
-
-    plt.savefig(f'{dataset_name}_cencg_contour.png', dpi=300, bbox_inches='tight')
-    plt.close(fig)
+    # Plot and Save CenCG contour
+    plot_contour(X, Y, cencg_accuracy_surface.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
