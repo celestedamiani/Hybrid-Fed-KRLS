@@ -356,3 +356,95 @@ def nys_simulation_surface(dataset_name, num_runs, X_train, y_train, X_test, y_t
 
     # Plot and Save CenCG contour
     plot_contour(X, Y, cencg_accuracy_surface.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
+
+
+
+
+### NEW APPROACH FOR LESS COMPUTATION TIME
+
+def nys_simulation_surface_chunk(dataset_name, num_runs, X_train, y_train, X_test, y_test, nyst_method, kernel_params, nystrom_landmarks_range, lambda_range, Nb, toll, chunk_id):
+    # Initialize arrays to store accuracy results for this chunk
+    fedcg_accuracy_surface = np.zeros((len(nystrom_landmarks_range), len(lambda_range)))
+    cencg_accuracy_surface = np.zeros((len(nystrom_landmarks_range), len(lambda_range)))
+    
+    total_iterations = len(nystrom_landmarks_range) * len(lambda_range) * num_runs
+    
+    with tqdm(total=total_iterations, desc=f"Running Chunk {chunk_id}", ncols=100) as pbar:
+        for i, nyst_points in enumerate(nystrom_landmarks_range):
+            for j, lam in enumerate(lambda_range):
+                fedcg_accuracies = []
+                cencg_accuracies = []
+
+                fedcg_model = FedCG(kernel_params, nyst_points, lam, Nb, toll)
+                cencg_model = FedCG(kernel_params, nyst_points, lam, 1, toll)
+                
+                alpha_init = fedcg_model.initialize_alpha()
+
+                for run in range(num_runs):
+                    seedrun = np.random.seed(run)
+
+                    # Load W matrix based on the dataset
+                    if dataset_name == 'Iris':
+                        W = load_iris_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Sonar':
+                        W = load_sonar_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Ionosphere':
+                        W = load_ionosphere_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Generated':
+                        W = load_random_gen_dataset(N=2000, feat=3, seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'BreastCancer':
+                        W = load_bc_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+                    elif dataset_name == 'Wine':
+                        W = load_wine_dataset(seed=seedrun, nystr_pt=nyst_points, nystr_method=nyst_method)[-1]
+
+                    _, _, fedcg_test_accuracy, _, _ = fedcg_model.fit(X_train, y_train, X_test, y_test, W=W, alpha_init=alpha_init, silent=True)
+                    fedcg_accuracies.append(fedcg_test_accuracy)
+
+                    _, _, cencg_test_accuracy, _, _ = cencg_model.fit(X_train, y_train, X_test, y_test, W=W, alpha_init=alpha_init, silent=True)
+                    cencg_accuracies.append(cencg_test_accuracy)
+                    
+                    pbar.update(1)
+                
+                fedcg_accuracy_surface[i, j] = np.mean(fedcg_accuracies)
+                cencg_accuracy_surface[i, j] = np.mean(cencg_accuracies)
+
+    # Save chunk results
+    pd.DataFrame(fedcg_accuracy_surface, index=nystrom_landmarks_range, columns=lambda_range).to_csv(f'fedcg_accuracy_surface_{dataset_name}_chunk_{chunk_id}.csv')
+    pd.DataFrame(cencg_accuracy_surface, index=nystrom_landmarks_range, columns=lambda_range).to_csv(f'cencg_accuracy_surface_{dataset_name}_chunk_{chunk_id}.csv')
+
+
+
+def combine_and_plot_results(dataset_name, chunks):
+    fedcg_combined = pd.DataFrame()
+    cencg_combined = pd.DataFrame()
+
+    for chunk_id in range(1, len(chunks) + 1):
+        fedcg_chunk = pd.read_csv(f'fedcg_accuracy_surface_{dataset_name}_chunk_{chunk_id}.csv', index_col=0)
+        cencg_chunk = pd.read_csv(f'cencg_accuracy_surface_{dataset_name}_chunk_{chunk_id}.csv', index_col=0)
+        
+        fedcg_combined = pd.concat([fedcg_combined, fedcg_chunk])
+        cencg_combined = pd.concat([cencg_combined, cencg_chunk])
+
+    # Sort and save combined results
+    fedcg_combined.sort_index().to_csv(f'fedcg_accuracy_surface_{dataset_name}_combined.csv')
+    cencg_combined.sort_index().to_csv(f'cencg_accuracy_surface_{dataset_name}_combined.csv')
+
+    # Create meshgrid for plotting
+    nystrom_landmarks_range = fedcg_combined.index.astype(float)
+    lambda_range = fedcg_combined.columns.astype(float)
+    X, Y = np.meshgrid(nystrom_landmarks_range, lambda_range)
+
+    # Find peaks and plot for FedCG
+    fedcg_peak_idx, fedcg_peak_accuracy = find_peak_accuracy(fedcg_combined.values)
+    fedcg_peak_nystrom = nystrom_landmarks_range[fedcg_peak_idx[0]]
+    fedcg_peak_lambda = lambda_range[fedcg_peak_idx[1]]
+    plot_surface(X, Y, fedcg_combined.values.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
+    plot_contour(X, Y, fedcg_combined.values.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
+
+    # Find peaks and plot for CenCG
+    cencg_peak_idx, cencg_peak_accuracy = find_peak_accuracy(cencg_combined.values)
+    cencg_peak_nystrom = nystrom_landmarks_range[cencg_peak_idx[0]]
+    cencg_peak_lambda = lambda_range[cencg_peak_idx[1]]
+    plot_surface(X, Y, cencg_combined.values.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
+    plot_contour(X, Y, cencg_combined.values.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
+
