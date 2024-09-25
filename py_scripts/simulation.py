@@ -354,7 +354,7 @@ def nys_simulation_surface(dataset_name, num_runs, X_train, y_train, X_test, y_t
     # Plot and Save FedCG contour
     plot_contour(X, Y, fedcg_accuracy_surface.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
 
-    # Plot and Save CenCG contour
+     # Plot and Save CenCG contour
     plot_contour(X, Y, cencg_accuracy_surface.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
 
 
