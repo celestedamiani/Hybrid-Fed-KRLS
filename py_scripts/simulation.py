@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, mean_squared_error, mean_absolute_error
 from kernel import Kernel  # Make sure to import your Kernel class
 from federated_functions import FedCG  # Make sure to import your FedCG class
@@ -218,42 +219,13 @@ def nys_simulation(dataset_name, num_runs, X_train, y_train, X_test, y_test, nys
 
 
 
+
 def find_peak_accuracy(accuracy_surface):
-    peak_idx = np.unravel_index(np.argmax(accuracy_surface), accuracy_surface.shape)
+    peak_idx = np.unravel_index(np.nanargmax(accuracy_surface), accuracy_surface.shape)
     peak_value = accuracy_surface[peak_idx]
     return peak_idx, peak_value
 
 
-def plot_surface(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, peak_accuracy):
-    fig = plt.figure(figsize=(12, 8))
-    ax = fig.add_subplot(111, projection='3d')
-    surf = ax.plot_surface(X, Y, Z, cmap='viridis')
-    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
-    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
-    ax.set_zlabel('Accuracy', fontsize=10)
-    ax.set_title(f'{model_name} Accuracy Surface - {dataset_name}', fontsize=12)
-    
-    # Mark the peak accuracy point
-    ax.scatter([peak_nystrom], [peak_lambda], [peak_accuracy], color='red', s=50, marker='*')
-    
-    plt.savefig(f'{dataset_name}_{model_name.lower()}_surface.png', dpi=300, bbox_inches='tight')
-    plt.close(fig)
-
-def plot_contour(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, peak_accuracy):
-    fig, ax = plt.subplots(figsize=(10, 8))
-    CS = ax.contourf(X, Y, Z, cmap='viridis')
-    fig.colorbar(CS)
-    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=12)
-    ax.set_ylabel('Regularization Parameter λ', fontsize=12)
-    ax.set_title(f'{model_name} Accuracy Contour - {dataset_name}', fontsize=14)
-    
-    # Mark the peak accuracy point
-    ax.plot(peak_nystrom, peak_lambda, 'ro')
-    ax.annotate(f'Peak: {peak_accuracy:.2f}', (peak_nystrom, peak_lambda), xytext=(5, 5), 
-                textcoords='offset points', color='red', fontweight='bold')
-    
-    plt.savefig(f'{dataset_name}_{model_name.lower()}_contour.png', dpi=300, bbox_inches='tight')
-    plt.close(fig)
     
     
 def nys_simulation_surface(dataset_name, num_runs, X_train, y_train, X_test, y_test, nyst_method, kernel_params, nystrom_landmarks_range, lambda_range, Nb, toll):
@@ -414,25 +386,16 @@ def nys_simulation_surface_chunk(dataset_name, num_runs, X_train, y_train, X_tes
 
 
 
-def combine_and_plot_results(dataset_name, chunks):
-    fedcg_combined = pd.DataFrame()
-    cencg_combined = pd.DataFrame()
+def plot_results(dataset_name):
+    fedcg_combined = pd.read_csv(f'fedcg_accuracy_surface_{dataset_name}.csv', index_col=0)
+    cencg_combined = pd.read_csv(f'cencg_accuracy_surface_{dataset_name}.csv', index_col=0)
 
-    for chunk_id in range(1, len(chunks) + 1):
-        fedcg_chunk = pd.read_csv(f'fedcg_accuracy_surface_{dataset_name}_chunk_{chunk_id}.csv', index_col=0)
-        cencg_chunk = pd.read_csv(f'cencg_accuracy_surface_{dataset_name}_chunk_{chunk_id}.csv', index_col=0)
-        
-        fedcg_combined = pd.concat([fedcg_combined, fedcg_chunk])
-        cencg_combined = pd.concat([cencg_combined, cencg_chunk])
-
-    # Sort and save combined results
-    fedcg_combined.sort_index().to_csv(f'fedcg_accuracy_surface_{dataset_name}_combined.csv')
-    cencg_combined.sort_index().to_csv(f'cencg_accuracy_surface_{dataset_name}_combined.csv')
 
     # Create meshgrid for plotting
     nystrom_landmarks_range = fedcg_combined.index.astype(float)
     lambda_range = fedcg_combined.columns.astype(float)
     X, Y = np.meshgrid(nystrom_landmarks_range, lambda_range)
+
 
     # Find peaks and plot for FedCG
     fedcg_peak_idx, fedcg_peak_accuracy = find_peak_accuracy(fedcg_combined.values)
@@ -440,6 +403,7 @@ def combine_and_plot_results(dataset_name, chunks):
     fedcg_peak_lambda = lambda_range[fedcg_peak_idx[1]]
     plot_surface(X, Y, fedcg_combined.values.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
     plot_contour(X, Y, fedcg_combined.values.T, "FedCG", dataset_name, fedcg_peak_nystrom, fedcg_peak_lambda, fedcg_peak_accuracy)
+    plot_heatmap(fedcg_combined, "FedCG", dataset_name)
 
     # Find peaks and plot for CenCG
     cencg_peak_idx, cencg_peak_accuracy = find_peak_accuracy(cencg_combined.values)
@@ -447,4 +411,64 @@ def combine_and_plot_results(dataset_name, chunks):
     cencg_peak_lambda = lambda_range[cencg_peak_idx[1]]
     plot_surface(X, Y, cencg_combined.values.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
     plot_contour(X, Y, cencg_combined.values.T, "CenCG", dataset_name, cencg_peak_nystrom, cencg_peak_lambda, cencg_peak_accuracy)
+    plot_heatmap(cencg_combined, "CenCG", dataset_name)
 
+
+
+
+def plot_surface(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, peak_accuracy):
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_surface(X, Y, Z, cmap='viridis')
+    ax.set_xlabel('Number of Nystrom Landmarks', fontsize=10)
+    ax.set_ylabel('Regularization Parameter λ', fontsize=10)
+    ax.set_zlabel('Accuracy', fontsize=10)
+    ax.set_title(f'{model_name} Accuracy Surface - {dataset_name}', fontsize=12)
+    
+    # Mark the peak accuracy point
+    ax.scatter([peak_nystrom], [peak_lambda], [peak_accuracy], color='red', s=50, marker='*')
+    
+    plt.savefig(f'{dataset_name}_{model_name.lower()}_surface.png', dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+def plot_contour(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, peak_accuracy):
+    # Create contour plot
+    fig=plt.figure(figsize=(12, 8))
+    contour = plt.contourf(X, Y, Z, levels=20, cmap='viridis')
+    plt.colorbar(contour, label='Accuracy')
+    #plt.xscale('log')
+    plt.xscale('linear')
+    plt.yscale('log')
+    plt.xlabel('Number of Nyström Landmarks')
+    plt.ylabel('Regularization Parameter λ')
+    plt.title('FedCG Accuracy Contour - Ionosphere')
+    
+    # Mark the peak accuracy point
+    plt.plot(peak_nystrom, peak_lambda, 'r*', markersize=15)
+
+    plt.annotate(f'Peak: {peak_accuracy:.4f}', (peak_nystrom, peak_lambda), 
+                 xytext=(-100, 20), textcoords='offset points', 
+                 color='red', fontweight='bold', 
+                 bbox=dict(facecolor='white', edgecolor='none', alpha=0.7),
+                 arrowprops=dict(arrowstyle="->", color='red'))
+
+    
+    plt.savefig(f'{dataset_name}_{model_name.lower()}_contour.png', dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+
+def plot_heatmap(data, model_name, dataset_name):
+    plt.figure(figsize=(12, 8))
+    ax = sns.heatmap(data, cmap='viridis', cbar_kws={'label': 'Accuracy'})
+    lambda_values = data.columns.astype(float)
+    x_ticks = np.arange(len(lambda_values))
+    plt.xticks(x_ticks[::5], [f'{x:.2e}' for x in lambda_values[::5]], rotation=45, ha='right')
+    
+    plt.xlabel('Regularization Parameter λ (log scale)')
+    plt.ylabel('Number of Nyström Landmarks')
+    plt.title(f'{model_name} Accuracy Heatmap - {dataset_name}')
+    
+    plt.tight_layout()
+    
+    plt.savefig(f'{dataset_name}_{model_name.lower()}_heatmap.png', dpi=300, bbox_inches='tight')
+    plt.close()
