@@ -441,8 +441,7 @@ def plot_contour(X, Y, Z, model_name, dataset_name, peak_nystrom, peak_lambda, p
     plt.yscale('log')
     plt.xlabel('Number of Nyström Landmarks')
     plt.ylabel('Regularization Parameter λ')
-    plt.title('FedCG Accuracy Contour  - {dataset_name}')
-    
+    plt.title(f'{model_name} Accuracy Contour - {dataset_name}', fontsize=12)    
     # Mark the peak accuracy point
     plt.plot(peak_nystrom, peak_lambda, 'r*', markersize=15)
 
