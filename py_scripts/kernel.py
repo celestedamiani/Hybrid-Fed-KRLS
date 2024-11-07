@@ -40,12 +40,18 @@ class Kernel:
 
         if X2 is not None:
             n2 = X2.shape[0]
-
+            
         if self.type == 0:  # Linear kernel
             if X2 is not None:
-                K = X2.dot(X1.T)
+                # For the feature-wise kernel computation
+                if X1.shape[1] == 1 and X2.shape[1] == 1:
+                    # Handle single feature case
+                    K = np.matmul(X1, X2.T)
+                else:
+                    # Handle multiple features case
+                    K = np.matmul(X1, X2.T)
             else:
-                K = X1.dot(X1.T)
+                K = np.matmul(X1, X1.T)
 
         elif self.type == 1:  # RBF kernel
             if X2 is not None:
